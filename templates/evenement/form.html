@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Modifier{% else %}Créer{% endif %} un événement{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><div class="crumbs"><a href="{% url 'Evenement:liste_evenement' %}">Événements</a> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>{% if object %}Modifier{% else %}Créer{% endif %}</span></div><h1>{% if object %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h1></div>
+</div>
+<div class="card panel">
+  <div class="panel-head"><div><h2>Informations de l'événement</h2><p>Renseignez les détails de l'activité municipale.</p></div></div>
+  <form method="post" style="padding:20px 22px">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="alert error">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="form-grid">
+      {% for field in form %}
+      <label class="f {% if field.name == 'description' %}full{% endif %}">
+        {{ field.label }} <em>*</em>
+        {{ field }}
+        {% if field.help_text %}<span class="help">{{ field.help_text }}</span>{% endif %}
+        {% if field.errors %}<span class="help" style="color:var(--red)">{{ field.errors|striptags }}</span>{% endif %}
+      </label>
+      {% endfor %}
+    </div>
+    <div class="form-actions">
+      <a class="btn" href="{% url 'Evenement:liste_evenement' %}">Annuler</a>
+      <button class="btn primary" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

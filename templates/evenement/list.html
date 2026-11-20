@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Gestion des événements{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><span>Accueil</span> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>Événements</span></div>
+    <h1>Gestion des événements</h1>
+    <p>Événements culturels et sportifs, conférences, réunions, festivals et activités municipales.</p>
+  </div>
+  <div class="actions">
+    <a class="btn primary" href="{% url 'Evenement:create_evenement' %}">
+      <svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Nouvel événement
+    </a>
+  </div>
+</div>
+<div class="stats">
+  <div class="card stat"><div class="ico c-violet"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div><div class="lbl">Événements</div><div class="val">{{ evenement_list|length }}</div><div class="hint">Tous les événements</div></div></div>
+  <div class="card stat"><div class="ico c-blue"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="lbl">Planification</div><div class="val">Municipale</div><div class="hint">Gestion centralisée</div></div></div>
+  <div class="card stat"><div class="ico c-teal"><svg class="i" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><div><div class="lbl">Suivi</div><div class="val">Temps réel</div><div class="hint">Statut des activités</div></div></div>
+  <div class="card stat"><div class="ico c-green"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.6"/><path d="M2.5 20.5c0-3.7 2.9-6 6.5-6s6.5 2.3 6.5 6"/></svg></div><div><div class="lbl">Capacité</div><div class="val">Globale</div><div class="hint">Places disponibles</div></div></div>
+</div>
+<div class="card panel">
+  <div class="panel-head"><div><h2>Liste des événements <span class="count">{{ evenement_list|length }}</span></h2><p>Planifiez et suivez les événements de la municipalité.</p></div></div>
+  <div class="toolbar">
+    <div class="field-search">
+      <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="event-search" name="q" placeholder="Rechercher par nom ou ID…" value="{{ request.GET.q }}" data-live-search="#tbl" autocomplete="off">
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead><tr><th>Événement</th><th>Type</th><th>Date & heure</th><th>Lieu & capacité</th><th>Statut</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for evenement in evenement_list %}
+        <tr data-event-name="{{ evenement.nom }}" data-event-id="{{ evenement.id_evenement }}">
+          <td><div class="cell-main"><span class="thumb c-violet"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><div><strong>{{ evenement.nom }}</strong><small>{{ evenement.description|truncatechars:38 }}</small></div></div></td>
+          <td><span class="tag">{{ evenement.get_type_display }}</span></td>
+          <td><strong>{{ evenement.date_heure|date:"d/m/Y" }}</strong><small>{{ evenement.date_heure|date:"H:i" }}</small></td>
+          <td>{{ evenement.lieu }}<small>{{ evenement.capacite }} places prévues</small></td>
+          <td><span class="badge s-{{ evenement.statut }}">{{ evenement.get_statut_display }}</span></td>
+          <td><div class="row-actions">
+            <a href="{% url 'Evenement:detail_evenement' pk=evenement.id_evenement %}" title="Consulter"><svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></a>
+            <a href="{% url 'Evenement:update_evenement' pk=evenement.id_evenement %}" title="Modifier"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14.5 6.5 3 3"/></svg></a>
+            <a class="danger" href="{% url 'Evenement:delete_evenement' pk=evenement.id_evenement %}" title="Supprimer" data-confirm="Supprimer cet événement ?"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg></a>
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Aucun événement trouvé.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Supprimer {{ evenement.nom }}{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="crumbs"><a href="{% url 'Evenement:liste_evenement' %}">Événements</a> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>Supprimer</span></div><h1>Supprimer l'événement</h1></div></div>
+<div class="card panel" style="max-width:680px">
+  <div class="panel-head"><div><h2>Confirmation requise</h2><p>Cette action est définitive.</p></div></div>
+  <div style="padding:22px"><p>Êtes-vous sûr de vouloir supprimer l'événement <strong>{{ evenement.nom }}</strong> ?</p></div>
+  <form method="post" class="form-actions" style="padding:14px 22px;border-top:1px solid var(--line)">
+    {% csrf_token %}
+    <a class="btn" href="{% url 'Evenement:liste_evenement' %}">Annuler</a>
+    <button class="btn danger" type="submit">Supprimer</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ evenement.nom }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><div class="crumbs"><a href="{% url 'Evenement:liste_evenement' %}">Événements</a> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>Détail</span></div><h1>Détail de l'événement</h1></div>
+  <div class="actions"><a class="btn" href="{% url 'Evenement:update_evenement' pk=evenement.id_evenement %}">Modifier</a></div>
+</div>
+<div class="card panel">
+  <div class="panel-head"><div class="cell-main"><span class="thumb c-violet"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><div><h2>{{ evenement.nom }}</h2><p>{{ evenement.get_type_display }}</p></div></div><span class="badge s-{{ evenement.statut }}">{{ evenement.get_statut_display }}</span></div>
+  <div class="form-grid" style="padding:22px">
+    <div class="f"><span>ID</span><strong>{{ evenement.id_evenement }}</strong></div>
+    <div class="f"><span>Type</span><strong>{{ evenement.get_type_display }}</strong></div>
+    <div class="f"><span>Date et heure</span><strong>{{ evenement.date_heure|date:"d/m/Y à H:i" }}</strong></div>
+    <div class="f"><span>Lieu</span><strong>{{ evenement.lieu }}</strong></div>
+    <div class="f"><span>Capacité</span><strong>{{ evenement.capacite }} places</strong></div>
+    <div class="f"><span>Statut</span><strong>{{ evenement.get_statut_display }}</strong></div>
+    <div class="f full"><span>Description</span><p style="color:var(--ink);font-weight:400">{{ evenement.description|default:"Aucune description." }}</p></div>
+  </div>
+  <div class="form-actions" style="padding:0 22px 22px"><a class="btn" href="{% url 'Evenement:liste_evenement' %}">Retourner à la liste</a></div>
+</div>
+{% endblock %}
