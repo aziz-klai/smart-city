@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Modifier un utilisateur{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="crumbs"><a href="/utilisateurs/">Utilisateurs</a> / Modifier</div><h1>Modifier un utilisateur</h1><p>{{ user_obj.prenom }} {{ user_obj.nom }} — {{ user_obj.email }}</p></div></div>
+<div class="card panel" style="padding:24px;max-width:850px">
+  <form method="post">{% csrf_token %}
+    {% if form.errors %}<div class="alert error">{{ form.errors }}</div>{% endif %}
+    <div class="form-grid">
+      <label class="f">Nom *<input class="input" name="nom" value="{{ form.nom.value|default_if_none:'' }}" required></label>
+      <label class="f">Prénom *<input class="input" name="prenom" value="{{ form.prenom.value|default_if_none:'' }}" required></label>
+      <label class="f">Email *<input class="input" type="email" name="email" value="{{ form.email.value|default_if_none:'' }}" required></label>
+      <label class="f">Téléphone<input class="input" name="telephone" value="{{ form.telephone.value|default_if_none:'' }}"></label>
+      <label class="f">Date de naissance<input class="input" type="date" name="date_naissance" value="{{ user_obj.date_naissance|date:'Y-m-d' }}"></label>
+      <label class="f">Rôle *<select name="role"><option value="agent" {% if form.role.value == 'agent' %}selected{% endif %}>Agent municipal</option><option value="admin" {% if form.role.value == 'admin' %}selected{% endif %}>Administrateur</option></select></label>
+      <label class="f">Statut *<select name="statut"><option value="actif" {% if form.statut.value == 'actif' %}selected{% endif %}>Actif</option><option value="inactif" {% if form.statut.value == 'inactif' %}selected{% endif %}>Inactif</option></select></label>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px"><button class="btn primary" type="submit">Enregistrer les modifications</button><a class="btn" href="/utilisateurs/">Annuler</a></div>
+  </form>
+</div>
+{% endblock %}
