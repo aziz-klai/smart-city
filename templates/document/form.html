@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if object %}Modifier{% else %}Ajouter{% endif %} un document · Smart City</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="{% url 'Document:listdocument' %}"><img src="{% static 'img/logo.svg' %}" alt="Smart City"><div><b>Smart City</b><small>Gestion municipale</small></div></a>
+        <nav class="nav">
+            <div class="nav-label">Général</div><a href="#">Tableau de bord</a>
+            <div class="nav-label">Modules métier</div><a href="#">Bâtiments</a><a href="#">Événements</a><a href="#">Transport</a>
+            <a href="{% url 'Document:listdocument' %}" class="active">Documents</a>
+        </nav>
+    </aside>
+    <div class="main">
+        <header class="topbar"><div class="top-actions"><div class="top-user"><span class="avatar">AB</span><div><b>Ahmed Ben Salah</b><small>Administrateur</small></div></div></div></header>
+        <main class="content">
+            <div class="page-head">
+                <div><div class="crumbs"><a href="{% url 'Document:listdocument' %}">Documents</a><span>› {% if object %}Modifier{% else %}Ajouter{% endif %}</span></div><h1>{% if object %}Modifier le document{% else %}Ajouter un document{% endif %}</h1></div>
+            </div>
+            <div class="card panel">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {% if form.non_field_errors %}<div class="alerts"><div class="alert">{{ form.non_field_errors }}</div></div>{% endif %}
+                        <div class="form-grid">
+                            <label class="f" for="{{ form.nom_doc.id_for_label }}">Nom du document <em>*</em>{{ form.nom_doc }}{% if form.nom_doc.errors %}<span class="help">{{ form.nom_doc.errors|join:", " }}</span>{% endif %}</label>
+                            <label class="f" for="{{ form.date.id_for_label }}">Date <em>*</em>{{ form.date }}{% if form.date.errors %}<span class="help">{{ form.date.errors|join:", " }}</span>{% endif %}</label>
+                            <label class="f" for="{{ form.type_doc.id_for_label }}">Type <em>*</em>{{ form.type_doc }}{% if form.type_doc.errors %}<span class="help">{{ form.type_doc.errors|join:", " }}</span>{% endif %}</label>
+                            <label class="f" for="{{ form.categorie.id_for_label }}">Catégorie <em>*</em>{{ form.categorie }}{% if form.categorie.errors %}<span class="help">{{ form.categorie.errors|join:", " }}</span>{% endif %}</label>
+                            <label class="f" for="{{ form.statut.id_for_label }}">Statut <em>*</em>{{ form.statut }}{% if form.statut.errors %}<span class="help">{{ form.statut.errors|join:", " }}</span>{% endif %}</label>
+                            <label class="f full" for="{{ form.description.id_for_label }}">Description <em>*</em>{{ form.description }}{% if form.description.errors %}<span class="help">{{ form.description.errors|join:", " }}</span>{% endif %}</label>
+                        </div>
+                    </div>
+                    <div class="modal-foot"><a class="btn" href="{% url 'Document:listdocument' %}">Annuler</a><button class="btn primary" type="submit">Enregistrer</button></div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

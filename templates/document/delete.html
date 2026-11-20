@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supprimer un document · Smart City</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="{% url 'Document:listdocument' %}"><img src="{% static 'img/logo.svg' %}" alt="Smart City"><div><b>Smart City</b><small>Gestion municipale</small></div></a>
+        <nav class="nav"><div class="nav-label">Général</div><a href="#">Tableau de bord</a><div class="nav-label">Modules métier</div><a href="#">Bâtiments</a><a href="#">Événements</a><a href="#">Transport</a><a href="{% url 'Document:listdocument' %}" class="active">Documents</a></nav>
+    </aside>
+    <div class="main">
+        <header class="topbar"><div class="top-actions"><div class="top-user"><span class="avatar">AB</span><div><b>Ahmed Ben Salah</b><small>Administrateur</small></div></div></div></header>
+        <main class="content">
+            <div class="page-head"><div><div class="crumbs"><a href="{% url 'Document:listdocument' %}">Documents</a><span>› Supprimer</span></div><h1>Supprimer le document</h1></div></div>
+            <div class="card section">
+                <p style="margin-bottom:18px">Êtes-vous sûr de vouloir supprimer le document <strong>{{ document.nom_doc }}</strong> ? Cette action est définitive.</p>
+                <form method="post" class="actions">
+                    {% csrf_token %}
+                    <a class="btn" href="{% url 'Document:listdocument' %}">Annuler</a>
+                    <button class="btn danger" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail du document · Smart City</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="{% url 'Document:listdocument' %}"><img src="{% static 'img/logo.svg' %}" alt="Smart City"><div><b>Smart City</b><small>Gestion municipale</small></div></a>
+        <nav class="nav"><div class="nav-label">Général</div><a href="#">Tableau de bord</a><div class="nav-label">Modules métier</div><a href="#">Bâtiments</a><a href="#">Événements</a><a href="#">Transport</a><a href="{% url 'Document:listdocument' %}" class="active">Documents</a></nav>
+    </aside>
+    <div class="main">
+        <header class="topbar"><div class="top-actions"><div class="top-user"><span class="avatar">AB</span><div><b>Ahmed Ben Salah</b><small>Administrateur</small></div></div></div></header>
+        <main class="content">
+            <div class="page-head"><div><div class="crumbs"><a href="{% url 'Document:listdocument' %}">Documents</a><span>› Détail</span></div><h1>{{ document.nom_doc }}</h1></div><div class="actions"><a class="btn" href="{% url 'Document:updatedocument' pk=document.id_doc %}">Modifier</a><a class="btn primary" href="{% url 'Document:listdocument' %}">Retour à la liste</a></div></div>
+            <div class="card section">
+                <div class="form-grid">
+                    <div class="f"><span>ID</span><b>{{ document.id_doc }}</b></div>
+                    <div class="f"><span>Date</span><b>{{ document.date|date:"d/m/Y" }}</b></div>
+                    <div class="f"><span>Type</span><b>{{ document.get_type_doc_display }}</b></div>
+                    <div class="f"><span>Catégorie</span><b>{{ document.get_categorie_display }}</b></div>
+                    <div class="f"><span>Statut</span><span class="badge s-{{ document.statut|lower }}">{{ document.get_statut_display }}</span></div>
+                    <div class="f full"><span>Description</span><p style="font-weight:400">{{ document.description }}</p></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

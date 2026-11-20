@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des documents · Smart City</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="{% url 'Document:listdocument' %}">
+            <img src="{% static 'img/logo.svg' %}" alt="Smart City">
+            <div><b>Smart City</b><small>Gestion municipale</small></div>
+        </a>
+        <nav class="nav">
+            <div class="nav-label">Général</div>
+            <a href="#">Tableau de bord</a>
+            <div class="nav-label">Modules métier</div>
+            <a href="#">Bâtiments</a>
+            <a href="#">Événements</a>
+            <a href="#">Transport</a>
+            <a href="{% url 'Document:listdocument' %}" class="active">Documents</a>
+        </nav>
+        <div class="side-foot">
+            <span class="avatar">AB</span>
+            <div class="who"><b>Ahmed Ben Salah</b><small>Administrateur</small></div>
+        </div>
+    </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <form class="topsearch" id="document-search-form" role="search">
+                <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input id="document-search" name="q" type="search" placeholder="Rechercher un document…" autocomplete="off">
+            </form>
+            <div class="top-actions">
+                <a class="icon-btn" href="#" title="Notifications">
+                    <svg class="i" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg>
+                </a>
+                <div class="top-user"><span class="avatar">AB</span><div><b>Ahmed Ben Salah</b><small>Administrateur</small></div></div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="page-head">
+                <div>
+                    <div class="crumbs"><a href="#">Accueil</a><span>› Documents</span></div>
+                    <h1>Gestion des documents</h1>
+                    <p>Autorisations, contrats, rapports et documents municipaux.</p>
+                </div>
+                <a class="btn primary" href="{% url 'Document:createdocument' %}">
+                    <svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    Ajouter un document
+                </a>
+            </div>
+
+            <div class="card panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Liste des documents <span class="count" id="document-count">{{ document_list|length }}</span></h2>
+                        <p>Consultez, modifiez et organisez les documents municipaux.</p>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>Type</th>
+                                <th>Catégorie</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for document in document_list %}
+                            <tr class="document-row"
+                                data-search="{{ document.id_doc }} {{ document.type_doc }} {{ document.nom_doc }} {{ document.get_type_doc_display }}">
+                                <td>
+                                    <div class="cell-main">
+                                        <span class="thumb c-blue">
+                                            <svg class="i" viewBox="0 0 24 24"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5"/></svg>
+                                        </span>
+                                        <div><strong>{{ document.nom_doc }}</strong><small>{{ document.id_doc }}</small></div>
+                                    </div>
+                                </td>
+                                <td>{{ document.get_type_doc_display }}</td>
+                                <td><span class="tag">{{ document.get_categorie_display }}</span></td>
+                                <td>{{ document.date|date:"d/m/Y" }}</td>
+                                <td><span class="badge s-{{ document.statut|lower }}">{{ document.get_statut_display }}</span></td>
+                                <td>
+                                    <div class="row-actions">
+                                        <a href="{% url 'Document:detaildocument' pk=document.id_doc %}" title="Voir">
+                                            <svg class="i" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                                        </a>
+                                        <a href="{% url 'Document:updatedocument' pk=document.id_doc %}" title="Modifier">
+                                            <svg class="i" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16zM13.5 6.5l4 4"/></svg>
+                                        </a>
+                                        <a class="danger" href="{% url 'Document:deletedocument' pk=document.id_doc %}" title="Supprimer">
+                                            <svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr id="server-empty-row"><td colspan="6" class="empty">Aucun document trouvé.</td></tr>
+                            {% endfor %}
+                            <tr id="dynamic-empty-row" hidden><td colspan="6" class="empty">Aucun document ne correspond à votre recherche.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchForm = document.getElementById('document-search-form');
+    const searchInput = document.getElementById('document-search');
+    const rows = Array.from(document.querySelectorAll('tbody tr.document-row'));
+    const count = document.getElementById('document-count');
+    const emptyRow = document.getElementById('dynamic-empty-row');
+
+    const normalize = value => value
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+
+    function filterDocuments() {
+        const query = normalize(searchInput.value);
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const matches = normalize(row.dataset.search).includes(query);
+            row.hidden = !matches;
+            if (matches) visibleCount++;
+        });
+
+        count.textContent = visibleCount;
+        emptyRow.hidden = visibleCount !== 0 || rows.length === 0;
+    }
+
+    searchForm.addEventListener('submit', event => event.preventDefault());
+    searchInput.addEventListener('input', filterDocuments);
+    searchInput.addEventListener('search', filterDocuments);
+});
+</script>
+</body>
+</html>
