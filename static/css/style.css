@@ -143,8 +143,11 @@ td:first-child{min-width:230px}
 .s-t{background:var(--gray-l);color:var(--gray)}
 .s-a{background:var(--red-l);color:var(--red)}
 .s-actif,.s-bon,.s-disponible{background:var(--green-l);color:var(--green)}
+.s-b{background:var(--green-l);color:var(--green)}
 .s-moyen,.s-maintenance{background:var(--orange-l);color:var(--orange)}
+.s-m{background:var(--orange-l);color:var(--orange)}
 .s-mauvais,.s-annule,.s-hors_service{background:var(--red-l);color:var(--red)}
+.s-mv{background:var(--red-l);color:var(--red)}
 .s-prevu{background:var(--blue-l);color:var(--blue)}
 .s-en_cours{background:var(--primary-l);color:var(--primary-d)}
 .s-valide{background:var(--green-l);color:var(--green)}

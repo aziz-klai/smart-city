@@ -1,5 +1,8 @@
+import datetime
+
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from utilisateurs.models import Utilisateur
 from .models import document
 
@@ -16,7 +19,7 @@ class DocumentIntegrationTests(TestCase):
     def document_data(self, nom_doc='Autorisation de travaux'):
         return {
             'nom_doc': nom_doc,
-            'date': '2026-11-21',
+            'date': timezone.localdate().isoformat(),
             'description': 'Document municipal de test',
             'type_doc': 'Autorisation',
             'categorie': 'Urbanisme',
@@ -70,3 +73,17 @@ class DocumentIntegrationTests(TestCase):
 
         self.assertContains(response, 'Contrat de voirie')
         self.assertNotContains(response, 'Facture municipale')
+
+    def test_document_date_cannot_be_in_the_past(self):
+        self.client.force_login(self.agent)
+        data = self.document_data('Document trop ancien')
+        data['date'] = (timezone.localdate() - datetime.timedelta(days=1)).isoformat()
+
+        response = self.client.post(reverse('Document:createdocument'), data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            'La date du document doit',
+        )
+        self.assertFalse(document.objects.filter(nom_doc='Document trop ancien').exists())

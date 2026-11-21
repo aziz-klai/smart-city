@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Supprimer {{ object.nom }}{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Supprimer le bâtiment</h1></div></div>
+<div class="card panel" style="padding:24px">
+  <p>Voulez-vous supprimer « <strong>{{ object.nom }}</strong> » ?</p>
+  <form method="post" style="margin-top:20px">
+    {% csrf_token %}
+    <button class="btn primary" type="submit">Confirmer la suppression</button>
+    <a class="btn" href="{% url 'Batiments:detail_batiment' object.pk %}">Annuler</a>
+  </form>
+</div>
+{% endblock %}

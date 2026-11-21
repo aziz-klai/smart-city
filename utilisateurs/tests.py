@@ -65,7 +65,7 @@ class UtilisateursCRUDTests(TestCase):
             self.assertIn(reverse('utilisateurs:connexion'), response['Location'])
         self.client.force_login(self.agent)
         response = self.client.get(reverse('batiments'))
-        self.assertContains(response, 'Module bientôt disponible')
+        self.assertContains(response, 'Gestion des bâtiments')
         response = self.client.get(reverse('Transport:liste_transports'))
         self.assertEqual(response.status_code, 200)
 

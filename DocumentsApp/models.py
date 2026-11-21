@@ -20,3 +20,10 @@ class document(models.Model):
         ('Annule', 'Annulé'),],default='En_cours')
     created_at= models.DateTimeField(auto_now_add=True)
     updates_at= models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        super().clean()
+        if self.date and self.date < timezone.localdate():
+            raise ValidationError({
+                'date': "La date du document doit être supérieure ou égale à la date d'aujourd'hui."
+            })

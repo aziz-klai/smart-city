@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Gestion des bâtiments{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs">
+      <a href="/">Accueil</a>
+      <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+      <span>Bâtiments</span>
+    </div>
+    <h1>Gestion des bâtiments</h1>
+    <p>Hôtel de ville, bibliothèques, centres culturels et sportifs, salles et bâtiments administratifs.</p>
+  </div>
+  <div class="actions">
+    <a class="btn primary" href="#" data-open="modal-form" data-title="Ajouter un bâtiment">
+      <svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Ajouter un bâtiment
+    </a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="card stat">
+    <div class="ico c-teal"><svg class="i" style="width:20px;height:20px" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h1.5M13.5 7H15M9 11h1.5M13.5 11H15M9 15h1.5M13.5 15H15M10 21v-3h4v3"/></svg></div>
+    <div><div class="lbl">Bâtiments municipaux</div><div class="val">{{ stats.total|default:0 }}</div></div>
+  </div>
+  <div class="card stat">
+    <div class="ico c-green"><svg class="i" style="width:20px;height:20px" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+    <div><div class="lbl">En bon état</div><div class="val">{{ stats.bon|default:0 }}</div></div>
+  </div>
+  <div class="card stat">
+    <div class="ico c-orange"><svg class="i" style="width:20px;height:20px" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+    <div><div class="lbl">État moyen</div><div class="val">{{ stats.moyen|default:0 }}</div></div>
+  </div>
+  <div class="card stat">
+    <div class="ico c-red"><svg class="i" style="width:20px;height:20px" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/></svg></div>
+    <div><div class="lbl">En mauvais état</div><div class="val">{{ stats.mauvais|default:0 }}</div></div>
+  </div>
+</div>
+
+<div class="card dist">
+  <h3>Répartition par type</h3>
+  <div class="dist-bar">
+    {% for d in stats.repartition %}<i style="width:{{ d.pct }}%;background:{{ d.couleur }}" title="{{ d.label }}"></i>{% endfor %}
+  </div>
+  <div class="dist-legend">
+    {% for d in stats.repartition %}<span><i style="background:{{ d.couleur }}"></i>{{ d.label }}<b>{{ d.pct }}%</b></span>{% endfor %}
+  </div>
+</div>
+
+<div class="card panel">
+  <div class="panel-head">
+    <div><h2>Liste des bâtiments <span class="count">{{ page_obj.paginator.count }}</span></h2><p>Consultez l'état et les informations de chaque bâtiment.</p></div>
+  </div>
+
+  <form class="toolbar" method="get">
+    <div class="field-search">
+      <svg class="i" style="width:17px;height:17px" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input name="q" placeholder="Rechercher par nom ou adresse…" value="{{ request.GET.q }}">
+    </div>
+    <select name="type">
+      <option value="">Tous les types</option>
+      <option value="hv"{% if request.GET.type == "hv" %} selected{% endif %}>Hôtel de ville</option>
+      <option value="bib"{% if request.GET.type == "bib" %} selected{% endif %}>Bibliothèque</option>
+      <option value="cc"{% if request.GET.type == "cc" %} selected{% endif %}>Centre culturel</option>
+      <option value="cs"{% if request.GET.type == "cs" %} selected{% endif %}>Centre sportif</option>
+      <option value="sm"{% if request.GET.type == "sm" %} selected{% endif %}>Salle municipale</option>
+      <option value="adm"{% if request.GET.type == "adm" %} selected{% endif %}>Bâtiment administratif</option>
+      <option value="a"{% if request.GET.type == "a" %} selected{% endif %}>Autre</option>
+    </select>
+    <select name="etat">
+      <option value="">Tous les états</option>
+      <option value="b"{% if request.GET.etat == "b" %} selected{% endif %}>Bon</option>
+      <option value="m"{% if request.GET.etat == "m" %} selected{% endif %}>Moyen</option>
+      <option value="mv"{% if request.GET.etat == "mv" %} selected{% endif %}>Mauvais</option>
+    </select>
+    <select name="tri">
+      <option value="">Trier par…</option>
+      <option value="nom"{% if request.GET.tri == "nom" %} selected{% endif %}>Nom (A → Z)</option>
+      <option value="-capacite"{% if request.GET.tri == "-capacite" %} selected{% endif %}>Capacité décroissante</option>
+      <option value="-date"{% if request.GET.tri == "-date" %} selected{% endif %}>Mise en service récente</option>
+      <option value="date"{% if request.GET.tri == "date" %} selected{% endif %}>Mise en service ancienne</option>
+    </select>
+    <button class="btn sm" type="submit">Filtrer</button>
+    <a class="btn sm" href="{% url 'Batiments:liste_batiment' %}" title="Réinitialiser">↻</a>
+  </form>
+
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead>
+        <tr><th>Bâtiment</th><th>Type</th><th>Capacité</th><th>Horaires</th><th>Mise en service</th><th>État</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+      {% for o in page_obj %}
+        <tr>
+          <td><div class="cell-main"><span class="thumb c-teal">🏢</span><div><strong>{{ o.nom }}</strong><small>{{ o.adresse }}</small></div></div></td>
+          <td><span class="tag">{{ o.get_type_display }}</span></td>
+          <td>{{ o.capacite }} pers.</td>
+          <td><small style="color:var(--ink-2)">{{ o.horaires|default:"-" }}</small></td>
+          <td>{{ o.date|date:"d/m/Y" }}</td>
+          <td><span class="badge s-{{ o.etat }}">{{ o.get_etat_display }}</span></td>
+          <td>
+            <div class="row-actions">
+              <a href="{% url 'Batiments:detail_batiment' o.pk %}" title="Consulter" aria-label="Consulter {{ o.nom }}">
+                <svg class="i" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </a>
+              <a href="{% url 'Batiments:modifier_batiment' o.pk %}" title="Modifier" aria-label="Modifier {{ o.nom }}">
+                <svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14.5 6.5 3 3"/></svg>
+              </a>
+              <a class="danger" href="{% url 'Batiments:supprimer_batiment' o.pk %}" title="Supprimer" aria-label="Supprimer {{ o.nom }}" data-confirm="Supprimer ce bâtiment ?">
+                <svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg>
+              </a>
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7" class="empty">Aucun bâtiment trouvé.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.paginator.count %}
+  <div class="pagination">
+    <span>Affichage <b>{{ page_obj.start_index }}–{{ page_obj.end_index }}</b> sur <b>{{ page_obj.paginator.count }}</b> bâtiments</span>
+    <div class="pages">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}{% for k, v in request.GET.items %}{% if k != 'page' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}">‹</a>{% endif %}
+      {% for n in page_obj.paginator.page_range %}
+        {% if n == page_obj.number %}<a class="on" href="#">{{ n }}</a>
+        {% elif n > page_obj.number|add:'-3' and n < page_obj.number|add:'3' %}<a href="?page={{ n }}{% for k, v in request.GET.items %}{% if k != 'page' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}">{{ n }}</a>{% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}{% for k, v in request.GET.items %}{% if k != 'page' %}&amp;{{ k }}={{ v|urlencode }}{% endif %}{% endfor %}">›</a>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal" id="modal-form">
+  <form class="modal-box" method="post" action="{% url 'Batiments:ajouter_batiment' %}">
+    {% csrf_token %}
+    <div class="modal-head">
+      <h3 data-modal-title>Ajouter un bâtiment</h3>
+      <a href="#" class="icon-btn" data-close>×</a>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <label class="f"><span>Nom du bâtiment <em>*</em></span><input class="input" type="text" name="nom" required></label>
+        <label class="f"><span>Type <em>*</em></span><select name="type" required><option value="">— Choisir —</option><option value="hv">Hôtel de ville</option><option value="bib">Bibliothèque</option><option value="cc">Centre culturel</option><option value="cs">Centre sportif</option><option value="sm">Salle municipale</option><option value="adm">Bâtiment administratif</option><option value="a">Autre</option></select></label>
+        <label class="f full"><span>Adresse <em>*</em></span><input class="input" type="text" name="adresse" required></label>
+        <label class="f"><span>Capacité <em>*</em></span><input class="input" type="number" name="capacite" min="0" required></label>
+        <label class="f"><span>Horaires d'ouverture</span><input class="input" type="text" name="horaires" placeholder="Lun–Ven · 08:00–17:00"></label>
+        <label class="f"><span>État <em>*</em></span><select name="etat" required><option value="b">Bon</option><option value="m">Moyen</option><option value="mv">Mauvais</option></select></label>
+        <label class="f"><span>Date de mise en service <em>*</em></span><input class="input" type="date" name="date" required></label>
+        <label class="f full"><span>Description</span><textarea name="description"></textarea></label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a href="#" class="btn" data-close>Annuler</a>
+      <button class="btn primary" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

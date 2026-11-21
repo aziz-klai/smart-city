@@ -26,7 +26,7 @@
           <svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
           Événements
         </a>
-        <a href="{% url 'batiments' %}" class="{% if request.resolver_match.url_name == 'batiments' %}active{% endif %}">
+        <a href="{% url 'Batiments:liste_batiment' %}" class="{% if request.resolver_match.namespace == 'Batiments' or request.resolver_match.url_name == 'batiments' %}active{% endif %}">
           <svg class="i" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M9 9h.01M15 9h.01M9 12h.01M15 12h.01"/></svg>
           Bâtiments
         </a>

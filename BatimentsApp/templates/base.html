@@ -1,0 +1,42 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Smart City{% endblock %} · Smart City</title>
+<link rel="icon" type="image/png" href="{% static 'img/logo-512.png' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app">
+<aside class="sidebar"><a class="brand" href="/"><img src="{% static 'img/logo-complet.png' %}" alt="Smart City — Gestion municipale"></a>
+<nav class="nav"><div class="nav-label">Général</div>
+<a href="/" class="{% if request.path == '/' %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Tableau de bord</a>
+<div class="nav-label">Administration</div>
+{% if user.is_staff %}
+<a href="/utilisateurs/" class="{% if '/utilisateurs/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.6"/><path d="M2.5 20.5c0-3.7 2.9-6 6.5-6s6.5 2.3 6.5 6"/><path d="M15.5 4.6a3.6 3.6 0 0 1 0 6.8M21.5 20.5c0-2.8-1.6-4.8-3.8-5.6"/></svg>Utilisateurs</a>
+{% endif %}
+<div class="nav-label">Modules métier</div>
+<a href="/batiments/" class="{% if '/batiments/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h1.5M13.5 7H15M9 11h1.5M13.5 11H15M9 15h1.5M13.5 15H15M10 21v-3h4v3"/></svg>Bâtiments</a>
+<a href="/evenements/" class="{% if '/evenements/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Événements</a>
+<a href="/transport/" class="{% if '/transport/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="15" rx="3"/><path d="M4 11h16M7 21v-3M17 21v-3"/><circle cx="8" cy="14.5" r=".9"/><circle cx="16" cy="14.5" r=".9"/></svg>Transport</a>
+<a href="/documents/" class="{% if '/documents/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Documents</a>
+<div class="nav-label">Mon espace</div>
+<a href="/profil/" class="{% if '/profil/' in request.path %}active{% endif %}"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-6.5 8-6.5s8 2.3 8 6.5"/></svg>Mon profil</a>
+</nav>
+<div class="side-foot"><span class="avatar">{{ user.prenom|first }}{{ user.nom|first }}</span><div class="who"><b>{{ user.prenom }} {{ user.nom }}</b><small>{% if user.is_staff %}Administrateur{% else %}Agent municipal{% endif %}</small></div><form method="post" action="/logout/" style="margin-left:auto">{% csrf_token %}<button class="out icon-btn" style="border:0;background:none;color:#7b8ba1" title="Déconnexion"><svg class="i" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h10"/></svg></button></form></div>
+</aside>
+<div class="main">
+<header class="topbar"><form class="topsearch" action="/recherche/"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input name="q" placeholder="Rechercher un bâtiment, un événement, une ligne, un document…"><kbd>Ctrl K</kbd></form><div class="top-actions"><a class="icon-btn" href="#" title="Notifications"><svg class="i" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg><span class="dot"></span></a><div class="top-user"><span class="avatar">{{ user.prenom|first }}{{ user.nom|first }}</span><div><b>{{ user.prenom }} {{ user.nom }}</b><small>{% if user.is_staff %}Administrateur{% else %}Agent municipal{% endif %}</small></div></div></div></header>
+<main class="content">
+{% if messages %}<div class="alerts">{% for m in messages %}<div class="alert {{ m.tags }}">{{ m }}</div>{% endfor %}</div>{% endif %}
+{% block content %}{% endblock %}
+</main>
+</div>
+</div>
+{% block modals %}{% endblock %}
+<script src="{% static 'js/app.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

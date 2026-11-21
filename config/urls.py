@@ -18,18 +18,13 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 from django.views.generic import TemplateView
+from BatimentsApp.views import ListeBatiment
 from DocumentsApp.views import Liste_Document
 
 urlpatterns = [
     path('', login_required(TemplateView.as_view(template_name='dashboard.html')), name='dashboard'),
-    path(
-        'batiments/',
-        login_required(TemplateView.as_view(
-            template_name='modules/placeholder.html',
-            extra_context={'module_name': 'Bâtiments'},
-        )),
-        name='batiments',
-    ),
+    path('batiments/', login_required(ListeBatiment.as_view()), name='batiments'),
+    path('batiments/', include('BatimentsApp.urls')),
     path('documents/', login_required(Liste_Document.as_view()), name='documents'),
     path('admin/', admin.site.urls),
     path('documents/', include('DocumentsApp.urls')),

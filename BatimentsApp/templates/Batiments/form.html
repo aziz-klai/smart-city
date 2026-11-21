@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Modifier{% else %}Ajouter{% endif %} un bâtiment{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'Batiments:liste_batiment' %}">Bâtiments</a> <span>{% if object %}Modifier{% else %}Ajouter{% endif %}</span></div>
+    <h1>{% if object %}Modifier{% else %}Ajouter{% endif %} un bâtiment</h1>
+  </div>
+</div>
+<div class="card panel">
+  <form method="post" style="padding:24px">
+    {% csrf_token %}
+    <div class="form-grid">{{ form.as_p }}</div>
+    <div class="modal-foot" style="padding:20px 0 0">
+      <a class="btn" href="{% url 'Batiments:liste_batiment' %}">Annuler</a>
+      <button class="btn primary" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
