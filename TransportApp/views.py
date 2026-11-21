@@ -23,8 +23,8 @@ def ajouter_transport(request):
     if request.method == 'POST' and form.is_valid():
         form.save()
         messages.success(request, "Transport ajouté avec succès.")
-        return redirect('liste_transports')
-    return render(request, 'transport/form.html', {'form': form, 'titre': 'Ajouter un transport'})
+        return redirect('Transport:liste_transports')
+    return render(request, 'transport/form.html', {'form': form, 'titre': 'Ajouter un transport', 'modifier': False})
 
 
 def modifier_transport(request, id):
@@ -33,8 +33,8 @@ def modifier_transport(request, id):
     if request.method == 'POST' and form.is_valid():
         form.save()
         messages.success(request, "Transport modifié avec succès.")
-        return redirect('liste_transports')
-    return render(request, 'transport/form.html', {'form': form, 'titre': 'Modifier le transport'})
+        return redirect('Transport:liste_transports')
+    return render(request, 'transport/form.html', {'form': form, 'titre': 'Modifier le transport', 'modifier': True})
 
 
 def supprimer_transport(request, id):
@@ -42,5 +42,5 @@ def supprimer_transport(request, id):
     if request.method == 'POST':
         transport.delete()
         messages.success(request, "Transport supprimé.")
-        return redirect('liste_transports')
+        return redirect('Transport:liste_transports')
     return render(request, 'transport/confirmer_suppression.html', {'transport': transport})
