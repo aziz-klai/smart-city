@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mon profil{% endblock %}
+
+{% block content %}
+<div class="page-head"><div><div class="crumbs"><a href="/">Accueil</a> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>Mon profil</span></div><h1>Mon profil</h1><p>Consultez et modifiez vos informations personnelles.</p></div></div>
+<div class="profile-grid">
+  <div class="card profile-card"><span class="avatar lg">{{ user.prenom|first }}{{ user.nom|first }}</span>
+    <h2>{{ user.prenom }} {{ user.nom }}</h2>
+    <span class="tag">{% if user.is_staff %}Administrateur{% else %}Agent municipal{% endif %}</span>
+    <span class="badge s-{{ user.statut }}">{{ user.get_statut_display }}</span>
+    <div class="kv">
+      <div><span>Email</span><b>{{ user.email }}</b></div>
+      <div><span>Téléphone</span><b>{{ user.telephone }}</b></div>
+      <div><span>Date de naissance</span><b>{{ user.date_naissance|date:'d/m/Y' }}</b></div>
+      <div><span>Membre depuis</span><b>{{ user.date_joined|date:'F Y' }}</b></div>
+      <div><span>Dernière connexion</span><b>{{ user.last_login|date:'d/m/Y H:i' }}</b></div>
+    </div>
+  </div>
+  <div class="card">
+    <form class="section" method="post" action="/profil/">{% csrf_token %}{% if form.errors %}<div class="alert error">{{ form.errors }}</div>{% endif %}<h3>Informations personnelles</h3><p>Ces informations sont visibles par les administrateurs.</p>
+      <div class="form-grid">
+        <label class="f">Nom<input class="input" type="text" name="nom" value="{{ user.nom }}"></label><label class="f">Prénom<input class="input" type="text" name="prenom" value="{{ user.prenom }}"></label>
+        <label class="f">Adresse email<input class="input" type="email" name="email" value="{{ user.email }}"></label><label class="f">Téléphone<input class="input" type="tel" name="telephone" value="{{ user.telephone }}"></label>
+        <label class="f">Date de naissance<input class="input" type="date" name="date_naissance" value="{{ user.date_naissance|date:'Y-m-d' }}"></label>
+      </div>
+      <div class="form-actions"><button class="btn" type="reset">Annuler</button><button class="btn primary" type="submit"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Enregistrer les modifications</button></div>
+    </form>
+    <form class="section" method="post" action="/profil/mot-de-passe/">{% csrf_token %}<h3>Changer le mot de passe</h3><p>Utilisez au moins 8 caractères avec des lettres et des chiffres.</p>
+      <div class="form-grid">
+        <label class="f full">Mot de passe actuel<input class="input" type="password" name="old_password"></label>
+        <label class="f">Nouveau mot de passe<input class="input" type="password" name="new_password1"></label>
+        <label class="f">Confirmer<input class="input" type="password" name="new_password2"></label>
+      </div>
+      <div class="form-actions"><button class="btn primary" type="submit"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg> Mettre à jour</button></div>
+    </form>
+    <div class="section"><h3 style="color:var(--red)">Zone sensible</h3><p>La désactivation bloque l'accès à la plateforme jusqu'à réactivation par un administrateur.</p>
+      <a class="btn danger" href="/profil/desactiver/" data-confirm="Voulez-vous vraiment désactiver votre compte ?"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></svg> Désactiver mon compte</a></div>
+  </div>
+</div>
+{% endblock %}
