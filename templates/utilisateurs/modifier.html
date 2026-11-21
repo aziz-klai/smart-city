@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Modifier un utilisateur{% endblock %}
 {% block content %}
-<div class="page-head"><div><div class="crumbs"><a href="/utilisateurs/">Utilisateurs</a> / Modifier</div><h1>Modifier un utilisateur</h1><p>{{ user_obj.prenom }} {{ user_obj.nom }} — {{ user_obj.email }}</p></div></div>
+<div class="page-head"><div><div class="crumbs"><a href="{% url 'utilisateurs:liste' %}">Utilisateurs</a> / Modifier</div><h1>Modifier un utilisateur</h1><p>{{ user_obj.prenom }} {{ user_obj.nom }} — {{ user_obj.email }}</p></div></div>
 <div class="card panel" style="padding:24px;max-width:850px">
   <form method="post">{% csrf_token %}
     {% if form.errors %}<div class="alert error">{{ form.errors }}</div>{% endif %}
@@ -14,7 +14,7 @@
       <label class="f">Rôle *<select name="role"><option value="agent" {% if form.role.value == 'agent' %}selected{% endif %}>Agent municipal</option><option value="admin" {% if form.role.value == 'admin' %}selected{% endif %}>Administrateur</option></select></label>
       <label class="f">Statut *<select name="statut"><option value="actif" {% if form.statut.value == 'actif' %}selected{% endif %}>Actif</option><option value="inactif" {% if form.statut.value == 'inactif' %}selected{% endif %}>Inactif</option></select></label>
     </div>
-    <div style="display:flex;gap:12px;margin-top:24px"><button class="btn primary" type="submit">Enregistrer les modifications</button><a class="btn" href="/utilisateurs/">Annuler</a></div>
+    <div style="display:flex;gap:12px;margin-top:24px"><button class="btn primary" type="submit">Enregistrer les modifications</button><a class="btn" href="{% url 'utilisateurs:liste' %}">Annuler</a></div>
   </form>
 </div>
 {% endblock %}

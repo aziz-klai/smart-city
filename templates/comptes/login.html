@@ -8,10 +8,10 @@
   <small style="color:#7f9aa6;position:relative">© 2026 Smart City — Usage interne réservé aux agents municipaux</small>
 </div>
 <div class="auth-form"><div class="auth-box"><h1>Connexion</h1><p>Accédez à votre espace agent municipal.</p>
-<form method="post" action="/login/">{% csrf_token %}{% if form.errors %}<div class="alert error">Identifiants incorrects ou formulaire invalide. Veuillez réessayer.</div>{% endif %}{% if messages %}{% for m in messages %}<div class="alert {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+<form method="post">{% csrf_token %}{% if form.errors %}<div class="alert error">Identifiants incorrects ou formulaire invalide. Veuillez réessayer.</div>{% endif %}{% if messages %}{% for m in messages %}<div class="alert {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
 <label class="f">Adresse email<div class="input-ico"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg><input class="input" type="email" name="username" placeholder="prenom.nom@smartcity.tn" required></div></label>
 <label class="f">Mot de passe<div class="input-ico"><svg class="i" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><input class="input" type="password" name="password" placeholder="••••••••" required></div></label>
 <div class="auth-row"><label><input type="checkbox" name="remember"> Se souvenir de moi</label><a class="link" href="#">Mot de passe oublié ?</a></div>
 <button class="btn primary lg block" type="submit">Se connecter</button></form>
-<div class="auth-foot">Pour obtenir un compte, contactez un administrateur.</div></div></div>
+<div class="auth-foot">Pas encore de compte ? <a href="{% url 'utilisateurs:inscription' %}">Créer un compte</a></div></div></div>
 </div></body></html>

@@ -1,5 +1,6 @@
 from functools import wraps
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -8,7 +9,12 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import CreationUtilisateurForm, ModificationUtilisateurForm, InformationsUtilisateurForm
+from .forms import (
+    CreationUtilisateurForm,
+    InscriptionUtilisateurForm,
+    ModificationUtilisateurForm,
+    InformationsUtilisateurForm,
+)
 from .models import Utilisateur
 
 
@@ -22,9 +28,15 @@ def administrateur_requis(view):
     return wrapper
 
 
-@login_required
-def accueil(request):
-    return redirect('utilisateurs:liste' if request.user.is_staff else 'profil')
+def inscription(request):
+    if request.user.is_authenticated:
+        return redirect('Evenement:liste_evenement')
+    form = InscriptionUtilisateurForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Votre compte a été créé. Vous pouvez maintenant vous connecter.')
+        return redirect('utilisateurs:connexion')
+    return render(request, 'comptes/inscription.html', {'form': form})
 
 
 def contexte_liste(request, formulaire=None):
@@ -151,7 +163,7 @@ def profil(request):
     if request.method == 'POST' and form.is_valid():
         form.save()
         messages.success(request, 'Votre profil a été mis à jour.')
-        return redirect('profil')
+        return redirect('utilisateurs:profil')
     return render(request, 'comptes/profil.html', {'form': form})
 
 
@@ -166,4 +178,14 @@ def mot_de_passe(request):
         messages.success(request, 'Votre mot de passe a été modifié.')
     else:
         messages.error(request, 'Mot de passe non modifié : ' + ' '.join(str(e) for errors in form.errors.values() for e in errors))
-    return redirect('profil')
+    return redirect('utilisateurs:profil')
+
+
+@login_required
+def desactiver_mon_compte(request):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    request.user.is_active = False
+    request.user.save(update_fields=['is_active'])
+    logout(request)
+    return redirect('utilisateurs:connexion')

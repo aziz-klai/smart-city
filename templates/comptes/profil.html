@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="card">
-    <form class="section" method="post" action="/profil/">{% csrf_token %}{% if form.errors %}<div class="alert error">{{ form.errors }}</div>{% endif %}<h3>Informations personnelles</h3><p>Ces informations sont visibles par les administrateurs.</p>
+    <form class="section" method="post" action="{% url 'utilisateurs:profil' %}">{% csrf_token %}{% if form.errors %}<div class="alert error">{{ form.errors }}</div>{% endif %}<h3>Informations personnelles</h3><p>Ces informations sont visibles par les administrateurs.</p>
       <div class="form-grid">
         <label class="f">Nom<input class="input" type="text" name="nom" value="{{ user.nom }}"></label><label class="f">Prénom<input class="input" type="text" name="prenom" value="{{ user.prenom }}"></label>
         <label class="f">Adresse email<input class="input" type="email" name="email" value="{{ user.email }}"></label><label class="f">Téléphone<input class="input" type="tel" name="telephone" value="{{ user.telephone }}"></label>
@@ -26,7 +26,7 @@
       </div>
       <div class="form-actions"><button class="btn" type="reset">Annuler</button><button class="btn primary" type="submit"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg> Enregistrer les modifications</button></div>
     </form>
-    <form class="section" method="post" action="/profil/mot-de-passe/">{% csrf_token %}<h3>Changer le mot de passe</h3><p>Utilisez au moins 8 caractères avec des lettres et des chiffres.</p>
+    <form class="section" method="post" action="{% url 'utilisateurs:mot_de_passe' %}">{% csrf_token %}<h3>Changer le mot de passe</h3><p>Utilisez au moins 8 caractères avec des lettres et des chiffres.</p>
       <div class="form-grid">
         <label class="f full">Mot de passe actuel<input class="input" type="password" name="old_password"></label>
         <label class="f">Nouveau mot de passe<input class="input" type="password" name="new_password1"></label>
@@ -35,7 +35,7 @@
       <div class="form-actions"><button class="btn primary" type="submit"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg> Mettre à jour</button></div>
     </form>
     <div class="section"><h3 style="color:var(--red)">Zone sensible</h3><p>La désactivation bloque l'accès à la plateforme jusqu'à réactivation par un administrateur.</p>
-      <a class="btn danger" href="/profil/desactiver/" data-confirm="Voulez-vous vraiment désactiver votre compte ?"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></svg> Désactiver mon compte</a></div>
+      <form method="post" action="{% url 'utilisateurs:desactiver_mon_compte' %}">{% csrf_token %}<button class="btn danger" type="submit" data-confirm="Voulez-vous vraiment désactiver votre compte ?"><svg class="i" style="width:16px;height:16px" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.7 5.7 12.6 12.6"/></svg> Désactiver mon compte</button></form></div>
   </div>
 </div>
 {% endblock %}

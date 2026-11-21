@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Détails utilisateur{% endblock %}
 {% block content %}
-<div class="page-head"><div><div class="crumbs"><a href="/utilisateurs/">Utilisateurs</a> / Détails</div><h1>{{ user_obj.prenom }} {{ user_obj.nom }}</h1><p>Fiche utilisateur</p></div></div>
+<div class="page-head"><div><div class="crumbs"><a href="{% url 'utilisateurs:liste' %}">Utilisateurs</a> / Détails</div><h1>{{ user_obj.prenom }} {{ user_obj.nom }}</h1><p>Fiche utilisateur</p></div></div>
 <div class="card panel" style="padding:24px;max-width:850px"><div class="form-grid">
   <p><strong>Adresse email</strong><br>{{ user_obj.email }}</p><p><strong>Téléphone</strong><br>{{ user_obj.telephone|default:'Non renseigné' }}</p>
   <p><strong>Date de naissance</strong><br>{{ user_obj.date_naissance|date:'d/m/Y'|default:'Non renseignée' }}</p>
   <p><strong>Rôle</strong><br>{% if user_obj.is_staff %}Administrateur{% else %}Agent municipal{% endif %}</p>
   <p><strong>Statut</strong><br>{{ user_obj.get_statut_display }}</p>
   <p><strong>Créé le</strong><br>{{ user_obj.date_joined|date:'d/m/Y' }}</p>
-</div><div style="display:flex;gap:12px;margin-top:24px"><a class="btn primary" href="/utilisateurs/{{ user_obj.pk }}/modifier/">Modifier</a><a class="btn" href="/utilisateurs/">Retour à la liste</a></div></div>
+</div><div style="display:flex;gap:12px;margin-top:24px"><a class="btn primary" href="{% url 'utilisateurs:modifier' user_obj.pk %}">Modifier</a><a class="btn" href="{% url 'utilisateurs:liste' %}">Retour à la liste</a></div></div>
 {% endblock %}

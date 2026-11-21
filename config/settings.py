@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'EvenementsApp',
+    'utilisateurs',
 ]
+
+AUTH_USER_MODEL = 'utilisateurs.Utilisateur'
+LOGIN_URL = 'utilisateurs:connexion'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'utilisateurs:connexion'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

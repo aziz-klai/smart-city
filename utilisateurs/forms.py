@@ -27,6 +27,33 @@ class InformationsUtilisateurForm(forms.ModelForm):
         return value
 
 
+class InscriptionUtilisateurForm(InformationsUtilisateurForm):
+    password1 = forms.CharField(widget=forms.PasswordInput, label='Mot de passe')
+    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirmation')
+
+    def clean(self):
+        data = super().clean()
+        password1, password2 = data.get('password1'), data.get('password2')
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', 'Les deux mots de passe sont différents.')
+        elif password1 and password2:
+            try:
+                validate_password(password1, self.instance)
+            except ValidationError as exc:
+                self.add_error('password1', exc)
+        return data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = False
+        user.is_superuser = False
+        user.is_active = True
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
+
+
 class CreationUtilisateurForm(InformationsUtilisateurForm):
     role = forms.ChoiceField(choices=(('agent', 'Agent municipal'), ('admin', 'Administrateur')))
     statut = forms.ChoiceField(choices=(('actif', 'Actif'), ('inactif', 'Inactif')), required=False)

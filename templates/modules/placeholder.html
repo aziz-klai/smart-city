@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ module_name }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'dashboard' %}">Tableau de bord</a><span> / </span><span>{{ module_name }}</span></div>
+    <h1>{{ module_name }}</h1>
+    <p>Ce module métier fait partie de la plateforme Smart City.</p>
+  </div>
+</div>
+<div class="card panel" style="padding:28px">
+  <h2>Module bientôt disponible</h2>
+  <p style="color:var(--muted);margin:8px 0 20px">La gestion des {{ module_name|lower }} sera ajoutée dans une prochaine version.</p>
+  <a class="btn primary" href="{% url 'dashboard' %}">Retour au tableau de bord</a>
+</div>
+{% endblock %}
