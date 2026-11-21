@@ -54,18 +54,20 @@ class UtilisateursCRUDTests(TestCase):
             reverse('Evenement:liste_evenement'),
             reverse('batiments'),
             reverse('documents'),
-            reverse('transports'),
+            reverse('Transport:liste_transports'),
         ):
             self.assertContains(response, module_url)
 
-    def test_placeholder_modules_require_login(self):
-        for module_name in ('batiments', 'documents', 'transports'):
+    def test_other_modules_require_login(self):
+        for module_name in ('batiments', 'documents'):
             response = self.client.get(reverse(module_name))
             self.assertEqual(response.status_code, 302)
             self.assertIn(reverse('utilisateurs:connexion'), response['Location'])
         self.client.force_login(self.agent)
         response = self.client.get(reverse('batiments'))
         self.assertContains(response, 'Module bientôt disponible')
+        response = self.client.get(reverse('Transport:liste_transports'))
+        self.assertEqual(response.status_code, 200)
 
     def test_registration_creates_a_non_admin_account(self):
         registration_page = self.client.get(reverse('utilisateurs:inscription'))

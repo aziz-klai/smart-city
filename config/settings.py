@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'EvenementsApp',
     'utilisateurs',
     'DocumentsApp',
+    'TransportApp',
 ]
 
 AUTH_USER_MODEL = 'utilisateurs.Utilisateur'

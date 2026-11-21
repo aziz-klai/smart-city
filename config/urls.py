@@ -31,16 +31,9 @@ urlpatterns = [
         name='batiments',
     ),
     path('documents/', login_required(Liste_Document.as_view()), name='documents'),
-    path(
-        'transports/',
-        login_required(TemplateView.as_view(
-            template_name='modules/placeholder.html',
-            extra_context={'module_name': 'Transports'},
-        )),
-        name='transports',
-    ),
     path('admin/', admin.site.urls),
     path('documents/', include('DocumentsApp.urls')),
     path('evenements/', include('EvenementsApp.urls')),
+    path('transports/', include('TransportApp.urls')),
     path('utilisateurs/', include('utilisateurs.urls')),
 ]

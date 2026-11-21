@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Transport {{ transport.numeroLigne }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'Transport:liste_transports' %}">Transports</a> <svg class="i" style="width:12px;height:12px" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg> <span>Détail</span></div>
+    <h1>Transport — ligne {{ transport.numeroLigne }}</h1>
+  </div>
+  <div class="actions">
+    <a class="btn" href="{% url 'Transport:modifier_transport' id=transport.id %}">Modifier</a>
+    <a class="btn primary" href="{% url 'Transport:liste_transports' %}">Retour à la liste</a>
+  </div>
+</div>
+<div class="card panel">
+  <div class="panel-head">
+    <div><h2>{{ transport.depart }} → {{ transport.destination }}</h2><p>Informations du véhicule et horaires de la ligne.</p></div>
+    <span class="badge s-{{ transport.etat }}">{{ transport.get_etat_display }}</span>
+  </div>
+  <div class="form-grid" style="padding:22px">
+    <div class="f"><span>Numéro de ligne</span><strong>{{ transport.numeroLigne }}</strong></div>
+    <div class="f"><span>Matricule du véhicule</span><strong>{{ transport.matricule_vehicule|default:"Non renseigné" }}</strong></div>
+    <div class="f"><span>Type de véhicule</span><strong>{{ transport.get_type_vehicule_display|default:"Non renseigné" }}</strong></div>
+    <div class="f"><span>Capacité</span><strong>{% if transport.capacite %}{{ transport.capacite }} places{% else %}Non renseignée{% endif %}</strong></div>
+    <div class="f"><span>Départ</span><strong>{{ transport.depart }}</strong></div>
+    <div class="f"><span>Destination</span><strong>{{ transport.destination }}</strong></div>
+    <div class="f"><span>Heure de départ</span><strong>{{ transport.heure_depart|time:"H:i"|default:"Non renseignée" }}</strong></div>
+    <div class="f"><span>Heure d'arrivée</span><strong>{{ transport.heure_arrivee|time:"H:i"|default:"Non renseignée" }}</strong></div>
+    <div class="f"><span>Jour de circulation</span><strong>{{ transport.get_jourdecirculation_display|default:"Non renseigné" }}</strong></div>
+  </div>
+</div>
+{% endblock %}

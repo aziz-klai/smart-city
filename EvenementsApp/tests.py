@@ -48,7 +48,7 @@ class EvenementIntegrationTests(TestCase):
         self.assertNotContains(response, reverse('utilisateurs:liste'))
         self.assertContains(response, reverse('batiments'))
         self.assertContains(response, reverse('documents'))
-        self.assertContains(response, reverse('transports'))
+        self.assertContains(response, reverse('Transport:liste_transports'))
 
     def test_administrator_navigation_links_both_modules(self):
         self.client.force_login(self.admin)
