@@ -1,0 +1,11 @@
+{% extends 'transport/base_transport.html' %}
+{% block title %}Supprimer{% endblock %}
+{% block content %}
+<h2>Supprimer le transport</h2>
+<p>Voulez-vous vraiment supprimer <strong>{{ transport }}</strong> ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Oui, supprimer</button>
+    <a class="btn btn-gray" href="{% url 'liste_transports' %}">Annuler</a>
+</form>
+{% endblock %}
