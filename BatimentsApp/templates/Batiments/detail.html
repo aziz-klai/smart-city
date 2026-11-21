@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ object.nom }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'Batiments:liste_batiment' %}">Bâtiments</a> <span>{{ object.nom }}</span></div>
+    <h1>{{ object.nom }}</h1>
+  </div>
+  <div class="actions">
+    <a class="btn" href="{% url 'Batiments:modifier_batiment' object.pk %}">Modifier</a>
+    <a class="btn danger" href="{% url 'Batiments:supprimer_batiment' object.pk %}" data-confirm="Supprimer ce bâtiment ?">Supprimer</a>
+  </div>
+</div>
+<div class="card panel">
+  <div class="panel-head"><div><h2>Informations du bâtiment</h2></div></div>
+  <dl style="display:grid;grid-template-columns:180px 1fr;gap:14px;padding:24px;margin:0">
+    <dt>ID</dt><dd>{{ object.id_batiment }}</dd>
+    <dt>Type</dt><dd>{{ object.get_type_display }}</dd>
+    <dt>Adresse</dt><dd>{{ object.adresse }}</dd>
+    <dt>Description</dt><dd>{{ object.description|default:"-" }}</dd>
+    <dt>Capacité</dt><dd>{{ object.capacite }} personnes</dd>
+    <dt>Horaires</dt><dd>{{ object.horaires|default:"-" }}</dd>
+    <dt>État</dt><dd><span class="badge s-{{ object.etat }}">{{ object.get_etat_display }}</span></dd>
+    <dt>Mise en service</dt><dd>{{ object.date|date:"d/m/Y" }}</dd>
+  </dl>
+</div>
+{% endblock %}
