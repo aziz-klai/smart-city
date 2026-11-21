@@ -5,33 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Transport{% endblock %} - Smart City</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f2f7fa; margin: 0; color: #1f2d3d; }
-        header { background: #13729e; color: white; padding: 16px 32px; font-size: 20px; font-weight: bold; }
-        main { max-width: 900px; margin: 24px auto; background: white; padding: 24px; border-radius: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-        th { background: #b4c4e4; text-align: left; }
-        th, td { padding: 10px; border-bottom: 1px solid #dde6ee; }
-        .btn { display: inline-block; padding: 8px 14px; border-radius: 6px; border: none;
-               color: white; text-decoration: none; cursor: pointer; font-size: 14px; background: #13729e; }
-        .btn-warning { background: #e0a800; }
-        .btn-danger { background: #d9534f; }
-        .btn-gray { background: #6c757d; }
-        .msg { padding: 10px; background: #d4edda; border-radius: 6px; margin-bottom: 12px; }
-        .errorlist { color: #c0392b; list-style: none; padding: 0; margin: 4px 0; }
-        form p { margin: 14px 0; }
-        input, select { padding: 8px; width: 100%; max-width: 360px; box-sizing: border-box; }
-        .top { display: flex; justify-content: space-between; align-items: center; }
-        .badge { padding: 3px 8px; border-radius: 10px; color: white; font-size: 12px; }
-        .actif { background: #28a745; } .maintenance { background: #e0a800; } .hors_service { background: #d9534f; }
+        :root {
+            --primary: #13729e;
+            --primary-dark: #0b4a6b;
+            --bg: #eef4f8;
+            --text: #1f2d3d;
+            --muted: #6b7c8c;
+            --border: #dde6ee;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+
+        header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white;
+                 padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;
+                 box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+        header .brand { font-size: 22px; font-weight: 700; letter-spacing: .5px; }
+        header .brand span { font-weight: 400; opacity: .85; font-size: 15px; margin-left: 10px; }
+        header nav a { color: white; text-decoration: none; margin-left: 20px; opacity: .9; font-size: 14px; }
+        header nav a:hover { opacity: 1; text-decoration: underline; }
+
+        main { max-width: 1000px; margin: 32px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; padding: 28px; box-shadow: 0 4px 16px rgba(19,114,158,.08); }
+
+        .page-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .page-head h2 { margin: 0; font-size: 24px; }
+        .count { background: #e3f1f8; color: var(--primary); padding: 3px 12px; border-radius: 20px;
+                 font-size: 13px; font-weight: 600; margin-left: 10px; }
+
+        .btn { display: inline-block; padding: 9px 18px; border-radius: 8px; border: none; color: white;
+               text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 600; background: var(--primary);
+               transition: .15s; }
+        .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-warning { background: #f0a500; }
+        .btn-danger { background: #dc3545; }
+        .btn-gray { background: #8394a3; }
+
+        .search { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search input { flex: 1; }
+
+        input, select { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;
+                        width: 100%; max-width: 420px; background: #fafcfd; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(19,114,158,.15); }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f6fa; color: var(--muted); text-transform: uppercase; font-size: 12px;
+             letter-spacing: .6px; text-align: left; }
+        th, td { padding: 14px 12px; border-bottom: 1px solid var(--border); }
+        tbody tr:hover { background: #f8fbfd; }
+        td.actions { white-space: nowrap; }
+
+        .badge { padding: 4px 12px; border-radius: 20px; color: white; font-size: 12px; font-weight: 600; }
+        .actif { background: #28a745; } .maintenance { background: #f0a500; } .hors_service { background: #dc3545; }
+
+        .msg { padding: 12px 16px; background: #d4edda; color: #1d6b32; border-left: 4px solid #28a745;
+               border-radius: 8px; margin-bottom: 18px; }
+        .errorlist { color: #c0392b; list-style: none; padding: 0; margin: 6px 0 0; font-size: 13px; }
+        form p { margin: 18px 0; }
+        form label { font-weight: 600; font-size: 14px; }
+        .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+        .msg { transition: opacity .5s ease, transform .5s ease; }
+        .msg.hide { opacity: 0; transform: translateY(-8px); }
     </style>
 </head>
 <body>
-    <header>Smart City : Gestion du transport</header>
+    <header>
+        <div class="brand">🏙️ Smart City <span>Gestion du transport</span></div>
+        <nav>
+            <a href="{% url 'liste_transports' %}">Transports</a>
+        </nav>
+    </header>
     <main>
         {% if messages %}
             {% for message in messages %}<div class="msg">{{ message }}</div>{% endfor %}
         {% endif %}
-        {% block content %}{% endblock %}
+        <div class="card">
+            {% block content %}{% endblock %}
+        </div>
     </main>
+        <script>
+        setTimeout(function () {
+            document.querySelectorAll('.msg').forEach(function (m) {
+                m.classList.add('hide');
+                setTimeout(function () { m.remove(); }, 500);
+            });
+        }, 3000);
+    </script>
 </body>
 </html>
