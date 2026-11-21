@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'EvenementsApp',
     'utilisateurs',
+    'DocumentsApp',
 ]
 
 AUTH_USER_MODEL = 'utilisateurs.Utilisateur'

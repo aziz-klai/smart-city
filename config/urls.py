@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 from django.views.generic import TemplateView
-
+from DocumentsApp.views import Liste_Document
 
 urlpatterns = [
     path('', login_required(TemplateView.as_view(template_name='dashboard.html')), name='dashboard'),
@@ -30,14 +30,7 @@ urlpatterns = [
         )),
         name='batiments',
     ),
-    path(
-        'documents/',
-        login_required(TemplateView.as_view(
-            template_name='modules/placeholder.html',
-            extra_context={'module_name': 'Documents'},
-        )),
-        name='documents',
-    ),
+    path('documents/', login_required(Liste_Document.as_view()), name='documents'),
     path(
         'transports/',
         login_required(TemplateView.as_view(
@@ -47,6 +40,7 @@ urlpatterns = [
         name='transports',
     ),
     path('admin/', admin.site.urls),
+    path('documents/', include('DocumentsApp.urls')),
     path('evenements/', include('EvenementsApp.urls')),
     path('utilisateurs/', include('utilisateurs.urls')),
 ]

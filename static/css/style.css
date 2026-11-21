@@ -35,6 +35,8 @@ h1,h2,h3{letter-spacing:-.01em}
 .side-foot form{margin-left:auto}
 .side-foot .out{color:#7b8ba1;padding:7px;border-radius:8px;display:grid;border:0;background:transparent;cursor:pointer}
 .side-foot .out:hover{background:var(--side-2);color:#fff}
+.side-foot a.out{margin-left:auto;color:#7b8ba1;padding:7px;border-radius:8px;display:grid}
+.side-foot a.out:hover{background:var(--side-2);color:#fff}
 .main{min-width:0;display:flex;flex-direction:column}
 .topbar{height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 28px;position:sticky;top:0;z-index:5}
 .topsearch{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:0 12px;color:var(--muted)}
@@ -145,6 +147,8 @@ td:first-child{min-width:230px}
 .s-mauvais,.s-annule,.s-hors_service{background:var(--red-l);color:var(--red)}
 .s-prevu{background:var(--blue-l);color:var(--blue)}
 .s-en_cours{background:var(--primary-l);color:var(--primary-d)}
+.s-valide{background:var(--green-l);color:var(--green)}
+.s-refuse{background:var(--red-l);color:var(--red)}
 .s-inactif,.s-termine,.s-archive{background:var(--gray-l);color:var(--gray)}
 .row-actions{display:flex;gap:2px}
 .row-actions a{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--muted)}

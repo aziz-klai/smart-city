@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Supprimer un document{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'Document:listdocument' %}">Documents</a><span>› Supprimer</span></div>
+    <h1>Supprimer le document</h1>
+  </div>
+</div>
+<div class="card section">
+  <p style="margin-bottom:18px">Êtes-vous sûr de vouloir supprimer le document <strong>{{ document.nom_doc }}</strong> ? Cette action est définitive.</p>
+  <form method="post" class="actions">
+    {% csrf_token %}
+    <a class="btn" href="{% url 'Document:listdocument' %}">Annuler</a>
+    <button class="btn danger" type="submit">Supprimer</button>
+  </form>
+</div>
+{% endblock %}

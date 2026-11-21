@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Gestion des documents{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'dashboard' %}">Accueil</a><span>› Documents</span></div>
+    <h1>Gestion des documents</h1>
+    <p>Autorisations, contrats, rapports et documents municipaux.</p>
+  </div>
+  <a class="btn primary" href="{% url 'Document:createdocument' %}">Ajouter un document</a>
+</div>
+<div class="card panel">
+  <div class="panel-head">
+    <div>
+      <h2>Liste des documents <span class="count" id="document-count">{{ document_list|length }}</span></h2>
+      <p>Consultez, modifiez et organisez les documents municipaux.</p>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="field-search">
+      <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="document-search" name="q" type="search" placeholder="Rechercher un document…" value="{{ request.GET.q }}" autocomplete="off">
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Document</th><th>Type</th><th>Catégorie</th><th>Date</th><th>Statut</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for document in document_list %}
+        <tr class="document-row" data-search="{{ document.id_doc }} {{ document.type_doc }} {{ document.nom_doc }} {{ document.categorie }} {{ document.description }}">
+          <td><div class="cell-main"><span class="thumb c-blue"><svg class="i" viewBox="0 0 24 24"><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 3v5h5"/></svg></span><div><strong>{{ document.nom_doc }}</strong><small>{{ document.id_doc }}</small></div></div></td>
+          <td>{{ document.get_type_doc_display }}</td>
+          <td><span class="tag">{{ document.get_categorie_display }}</span></td>
+          <td>{{ document.date|date:"d/m/Y" }}</td>
+          <td><span class="badge s-{{ document.statut|lower }}">{{ document.get_statut_display }}</span></td>
+          <td><div class="row-actions">
+            <a href="{% url 'Document:detaildocument' pk=document.pk %}" title="Voir"><svg class="i" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></svg></a>
+            <a href="{% url 'Document:updatedocument' pk=document.pk %}" title="Modifier"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4l11-11-4-4L4 16zM13.5 6.5l4 4"/></svg></a>
+            <a class="danger" href="{% url 'Document:deletedocument' pk=document.pk %}" title="Supprimer"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg></a>
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Aucun document trouvé.</td></tr>
+        {% endfor %}
+        <tr id="dynamic-empty-row" hidden><td colspan="6" class="empty">Aucun document ne correspond à votre recherche.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('document-search');
+  const rows = Array.from(document.querySelectorAll('tbody tr.document-row'));
+  const count = document.getElementById('document-count');
+  const emptyRow = document.getElementById('dynamic-empty-row');
+  const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+  function filterDocuments() {
+    const query = normalize(searchInput.value);
+    let visibleCount = 0;
+    rows.forEach(row => {
+      const matches = normalize(row.dataset.search).includes(query);
+      row.hidden = !matches;
+      if (matches) visibleCount++;
+    });
+    count.textContent = visibleCount;
+    emptyRow.hidden = visibleCount !== 0 || rows.length === 0;
+  }
+
+  searchInput.addEventListener('input', filterDocuments);
+  searchInput.addEventListener('search', filterDocuments);
+});
+</script>
+{% endblock %}

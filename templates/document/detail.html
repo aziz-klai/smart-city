@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Détail du document{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <div class="crumbs"><a href="{% url 'Document:listdocument' %}">Documents</a><span>› Détail</span></div>
+    <h1>{{ document.nom_doc }}</h1>
+  </div>
+  <div class="actions">
+    <a class="btn" href="{% url 'Document:updatedocument' pk=document.pk %}">Modifier</a>
+    <a class="btn primary" href="{% url 'Document:listdocument' %}">Retour à la liste</a>
+  </div>
+</div>
+<div class="card section">
+  <div class="form-grid">
+    <div class="f"><span>ID</span><b>{{ document.id_doc }}</b></div>
+    <div class="f"><span>Date</span><b>{{ document.date|date:"d/m/Y" }}</b></div>
+    <div class="f"><span>Type</span><b>{{ document.get_type_doc_display }}</b></div>
+    <div class="f"><span>Catégorie</span><b>{{ document.get_categorie_display }}</b></div>
+    <div class="f"><span>Statut</span><span class="badge s-{{ document.statut|lower }}">{{ document.get_statut_display }}</span></div>
+    <div class="f full"><span>Description</span><p style="font-weight:400">{{ document.description }}</p></div>
+  </div>
+</div>
+{% endblock %}
